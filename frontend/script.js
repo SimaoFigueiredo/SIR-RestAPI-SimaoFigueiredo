@@ -17,10 +17,33 @@ async function carregarAlunos() {
         alunos.forEach((aluno) => {
             const item = document.createElement("li");
             item.textContent = `${aluno.nome} ${aluno.apelido} - Curso: ${aluno.idCurso} - Ano: ${aluno.anoCurricular}`;
+
+            const botaoApagar = document.createElement("button");
+            botaoApagar.textContent = "Apagar";
+            botaoApagar.addEventListener("click", () => apagarAluno(aluno.id));
+
+            item.appendChild(document.createTextNode(" "));
+            item.appendChild(botaoApagar);
             listaAlunos.appendChild(item);
         });
     } catch (erro) {
         listaAlunos.innerHTML = `<li>Erro: ${erro.message}</li>`;
+    }
+}
+
+async function apagarAluno(id) {
+    try {
+        const resposta = await fetch(`${API_URL}/${id}`, {
+            method: "DELETE"
+        });
+
+        if (!resposta.ok) {
+            throw new Error("Não foi possível apagar o aluno.");
+        }
+
+        carregarAlunos();
+    } catch (erro) {
+        mensagem.textContent = `Erro: ${erro.message}`;
     }
 }
 

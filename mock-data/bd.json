@@ -63,14 +63,6 @@
       "idCurso": 2,
       "anoCurricular": 1,
       "idade": 19
-    },
-    {
-      "nome": "Simao",
-      "apelido": "Figueiredo",
-      "idCurso": 1,
-      "anoCurricular": 3,
-      "idade": 19,
-      "id": 9
     }
   ],
   "cursos": [

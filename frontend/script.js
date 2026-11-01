@@ -2,6 +2,8 @@ const API_URL = "http://localhost:3000/alunos";
 const listaAlunos = document.querySelector("#lista-alunos");
 const formAluno = document.querySelector("#form-aluno");
 const mensagem = document.querySelector("#mensagem");
+const botaoFormulario = document.querySelector("#botao-formulario");
+let alunoEmEdicao = null;
 
 async function carregarAlunos() {
     try {
@@ -22,6 +24,12 @@ async function carregarAlunos() {
             botaoApagar.textContent = "Apagar";
             botaoApagar.addEventListener("click", () => apagarAluno(aluno.id));
 
+            const botaoEditar = document.createElement("button");
+            botaoEditar.textContent = "Editar";
+            botaoEditar.addEventListener("click", () => prepararEdicao(aluno));
+
+            item.appendChild(document.createTextNode(" "));
+            item.appendChild(botaoEditar);
             item.appendChild(document.createTextNode(" "));
             item.appendChild(botaoApagar);
             listaAlunos.appendChild(item);
@@ -29,6 +37,17 @@ async function carregarAlunos() {
     } catch (erro) {
         listaAlunos.innerHTML = `<li>Erro: ${erro.message}</li>`;
     }
+}
+
+function prepararEdicao(aluno) {
+    alunoEmEdicao = aluno.id;
+    document.querySelector("#nome").value = aluno.nome;
+    document.querySelector("#apelido").value = aluno.apelido;
+    document.querySelector("#idCurso").value = aluno.idCurso;
+    document.querySelector("#anoCurricular").value = aluno.anoCurricular;
+    document.querySelector("#idade").value = aluno.idade;
+    botaoFormulario.textContent = "Guardar alterações";
+    mensagem.textContent = `A editar ${aluno.nome} ${aluno.apelido}.`;
 }
 
 async function apagarAluno(id) {
@@ -61,18 +80,25 @@ formAluno.addEventListener("submit", async (evento) => {
     };
 
     try {
-        const resposta = await fetch(API_URL, {
-            method: "POST",
+        const resposta = await fetch(
+            alunoEmEdicao ? `${API_URL}/${alunoEmEdicao}` : API_URL,
+            {
+            method: alunoEmEdicao ? "PUT" : "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(novoAluno)
-        });
+            }
+        );
 
         if (!resposta.ok) {
             throw new Error("Não foi possível adicionar o aluno.");
         }
 
         formAluno.reset();
-        mensagem.textContent = "Aluno adicionado com sucesso.";
+        mensagem.textContent = alunoEmEdicao
+            ? "Aluno atualizado com sucesso."
+            : "Aluno adicionado com sucesso.";
+        alunoEmEdicao = null;
+        botaoFormulario.textContent = "Adicionar aluno";
         carregarAlunos();
     } catch (erro) {
         mensagem.textContent = `Erro: ${erro.message}`;

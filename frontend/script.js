@@ -1,5 +1,7 @@
 const API_URL = "http://localhost:3000/alunos";
 const listaAlunos = document.querySelector("#lista-alunos");
+const formAluno = document.querySelector("#form-aluno");
+const mensagem = document.querySelector("#mensagem");
 
 async function carregarAlunos() {
     try {
@@ -23,3 +25,33 @@ async function carregarAlunos() {
 }
 
 carregarAlunos();
+
+formAluno.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+
+    const novoAluno = {
+        nome: document.querySelector("#nome").value,
+        apelido: document.querySelector("#apelido").value,
+        idCurso: Number(document.querySelector("#idCurso").value),
+        anoCurricular: Number(document.querySelector("#anoCurricular").value),
+        idade: Number(document.querySelector("#idade").value)
+    };
+
+    try {
+        const resposta = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(novoAluno)
+        });
+
+        if (!resposta.ok) {
+            throw new Error("Não foi possível adicionar o aluno.");
+        }
+
+        formAluno.reset();
+        mensagem.textContent = "Aluno adicionado com sucesso.";
+        carregarAlunos();
+    } catch (erro) {
+        mensagem.textContent = `Erro: ${erro.message}`;
+    }
+});

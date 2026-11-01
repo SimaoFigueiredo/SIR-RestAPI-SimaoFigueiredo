@@ -11,6 +11,19 @@
         <h1>Gestão de Alunos</h1>
 
         <section>
+            <h2>Adicionar aluno</h2>
+            <form id="form-aluno">
+                <input id="nome" type="text" placeholder="Nome" required>
+                <input id="apelido" type="text" placeholder="Apelido" required>
+                <input id="idCurso" type="number" placeholder="ID do curso" min="1" required>
+                <input id="anoCurricular" type="number" placeholder="Ano curricular" min="1" required>
+                <input id="idade" type="number" placeholder="Idade" min="1" required>
+                <button type="submit">Adicionar aluno</button>
+            </form>
+            <p id="mensagem"></p>
+        </section>
+
+        <section>
             <h2>Alunos</h2>
             <ul id="lista-alunos">
                 <li>A lista será carregada brevemente...</li>
